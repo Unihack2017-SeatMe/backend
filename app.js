@@ -27,9 +27,9 @@ app.use('/', index);
 app.use('/users', users);
 
 app.post('/room/fullness/', function(req, res) {
-	var data = req.params;
+	var data = req.body;
 	console.log(data);
-	return res.json({'':''})
+	return res.json({'you sent': data})
 });
 
 app.listen(port, () => {
