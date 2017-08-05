@@ -77,6 +77,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_morgan___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_morgan__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_body_parser__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_body_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_body_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_socket_io__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_http__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_http___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_http__);
+
 
 
 
@@ -85,6 +90,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 const port = process.env.PORT || 8080;
 
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()();
+
+const server = __WEBPACK_IMPORTED_MODULE_5_http___default.a.Server(app);
+
+const io = __WEBPACK_IMPORTED_MODULE_4_socket_io___default()(server);
+
+server.listen(port, undefined, undefined, () => {
+  console.log("Server running on port " + port);
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -99,10 +112,6 @@ app.get('/', (req, res) => {
 app.post('/room', (req, res) => {
   res.status(204);
   res.send();
-});
-
-app.listen(port, () => {
-  console.log("Server running on port " + port);
 });
 
 // catch 404 and forward to error handler
@@ -146,6 +155,18 @@ module.exports = require("morgan");
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+module.exports = require("socket.io");
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+module.exports = require("http");
 
 /***/ })
 /******/ ]);

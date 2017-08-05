@@ -2,10 +2,19 @@ import express from 'express';
 import path from 'path';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-
+import SocketIo from 'socket.io';
+import http from 'http';
 const port = process.env.PORT || 8080;
 
 const app = express();
+
+const server = http.Server(app);
+
+const io = SocketIo(server);
+
+server.listen(port, undefined, undefined, () => {
+	console.log("Server running on port " + port);
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -20,10 +29,6 @@ app.get('/', (req, res) => {
 app.post('/room', (req, res) => {
 	res.status(204);
   res.send();
-});
-
-app.listen(port, () => {
-	console.log("Server running on port " + port);
 });
 
 // catch 404 and forward to error handler
@@ -43,3 +48,4 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
+
