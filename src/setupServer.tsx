@@ -6,6 +6,7 @@ import * as SocketIo from 'socket.io';
 import * as http from 'http';
 import { autorun } from 'mobx'; 
 import { allRoomDataKey } from './shared/socket-keys';
+import { RoomData } from './shared/model/RoomData';
 function createJsonFromMapState(mapState) {
   return mapState.allRoomData.values().map(
     roomData => {
@@ -35,7 +36,7 @@ function setupServer(mapState, port) {
   });
 
   app.post('/devices', (req, res) => {
-    mapState.addRoomData(req.body);
+    mapState.addRoomData(new RoomData(req.body));
     console.info(req.body);
     res.status(200);
     res.json({});
