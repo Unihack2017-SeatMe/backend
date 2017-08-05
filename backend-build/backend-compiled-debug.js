@@ -76,11 +76,11 @@ module.exports = require("mobx");
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setupServer__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_state_appState__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_state_dummyState__ = __webpack_require__(10);
 
 
 let envPort = process.env.PORT || 8080;
-Object(__WEBPACK_IMPORTED_MODULE_0__setupServer__["a" /* setupServer */])(__WEBPACK_IMPORTED_MODULE_1__shared_state_appState__["a" /* mapState */], envPort);
+Object(__WEBPACK_IMPORTED_MODULE_0__setupServer__["a" /* setupServer */])(__WEBPACK_IMPORTED_MODULE_1__shared_state_dummyState__["a" /* mapState */], envPort);
 
 /***/ }),
 /* 2 */
@@ -230,7 +230,18 @@ const socketKeys = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return mapState; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_MapState__ = __webpack_require__(11);
 
-const mapState = new __WEBPACK_IMPORTED_MODULE_0__model_MapState__["a" /* MapState */](new Map());
+let currentId = 0;
+const capacity = 100;
+let currentCount = 30;
+const initial = [];
+for (let i = 0; i < 5; i++) {
+  initial.push([i, {
+    count: currentCount,
+    capacity
+  }]);
+  currentCount += 10;
+}
+const mapState = new __WEBPACK_IMPORTED_MODULE_0__model_MapState__["a" /* MapState */](new Map(initial));
 
 
 /***/ }),
@@ -242,7 +253,17 @@ const mapState = new __WEBPACK_IMPORTED_MODULE_0__model_MapState__["a" /* MapSta
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mobx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__LOCATIONS__ = __webpack_require__(12);
-var _desc, _value, _class;
+var _desc, _value, _class, _descriptor;
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -273,15 +294,19 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
 
 
 
 
 let MapState = (_class = class MapState {
   constructor(initialRoomData) {
-    this.allRoomState = null;
+    _initDefineProp(this, 'allRoomState', _descriptor, this);
 
-    this.allRoomState = Object(__WEBPACK_IMPORTED_MODULE_0_mobx__["observable"])(initialRoomData);
+    this.allRoomState = initialRoomData;
   }
 
   addRoomData(roomData) {
@@ -300,7 +325,6 @@ let MapState = (_class = class MapState {
   get allRoomGeoData() {
     const result = [];
     for (const [key, { count, capacity }] of this.allRoomData) {
-      console.log(capacity);
       result.push({
         type: 'Feature',
         properties: {
@@ -310,13 +334,18 @@ let MapState = (_class = class MapState {
         },
         geometry: {
           type: 'Polygon',
-          coordinates: [__WEBPACK_IMPORTED_MODULE_1__LOCATIONS__["a" /* default */][key].coordinates]
+          coordinates: [__WEBPACK_IMPORTED_MODULE_1__LOCATIONS__["a" /* default */][key].coordinates.map(([lng, lat]) => [lat, lng])]
         }
       });
     }
     return result;
   }
-}, (_applyDecoratedDescriptor(_class.prototype, 'addRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'addRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'setRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'setRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomGeoData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomGeoData'), _class.prototype)), _class);
+}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'allRoomState', [__WEBPACK_IMPORTED_MODULE_0_mobx__["observable"]], {
+  enumerable: true,
+  initializer: function () {
+    return null;
+  }
+}), _applyDecoratedDescriptor(_class.prototype, 'addRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'addRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'setRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'setRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomGeoData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomGeoData'), _class.prototype)), _class);
 
 
 
@@ -330,22 +359,23 @@ let MapState = (_class = class MapState {
 const LOCATIONS = {
   0: {
     name: 'Room 0',
-    coordinates: [[144.9628, -37.8165], [144.9628, -37.8163], [144.9627, -37.8163], [144.9627, -37.8165], [144.9628, -37.8165]]
-  },
-  1: {
     coordinates: [[-37.8165, 144.9628], [-37.8163, 144.9628], [-37.8163, 144.9627], [-37.8165, 144.9627], [-37.8165, 144.9628]]
   },
+  1: {
+    name: 'Room 1',
+    coordinates: [[-37.8162, 144.9628], [-37.8160, 144.9628], [-37.8160, 144.9627], [-37.8162, 144.9627], [-37.8162, 144.9628]]
+  },
   2: {
-    name: 'Room 0',
-    coordinates: [[-37.8161, 144.9624], [-37.8159, 144.9624], [-37.8159, 144.9623], [-37.8161, 144.9623], [-37.8161, 144.9624]]
+    name: 'Room 2',
+    coordinates: [[-37.8165, 144.9631], [-37.8163, 144.9631], [-37.8163, 144.9630], [-37.8165, 144.9630], [-37.8165, 144.9631]]
   },
   3: {
-    name: 'Room 0',
-    coordinates: [[-37.8158, 144.9621], [-37.8156, 144.9621], [-37.8156, 144.9620], [-37.8158, 144.9620], [-37.8158, 144.9621]]
+    name: 'Room 3',
+    coordinates: [[-37.8165, 144.9638], [-37.8163, 144.9638], [-37.8163, 144.9637], [-37.8165, 144.9637], [-37.8165, 144.9638]]
   },
   4: {
-    name: 'Room 0',
-    coordinates: [[-37.8153, 144.9616], [-37.8151, 144.9616], [-37.8151, 144.9615], [-37.8153, 144.9615], [-37.8153, 144.9616]]
+    name: 'Room 4',
+    coordinates: [[-37.8165, 144.9648], [-37.8163, 144.9648], [-37.8163, 144.9647], [-37.8165, 144.9647], [-37.8165, 144.9648]]
   }
 };
 
