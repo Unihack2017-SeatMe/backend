@@ -1,11 +1,11 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 8080;
 
-var app = express();
+const app = express();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -18,9 +18,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/room', function(req, res) {
-	var data = req.body;
-  console.log(data);
-  res.status(204);
+	res.status(204);
   res.send();
 });
 
