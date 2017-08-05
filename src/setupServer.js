@@ -37,7 +37,8 @@ function setupServer(mapState, port) {
   app.post('/devices', (req, res) => {
     mapState.addRoomData(req.body);
     console.info(req.body);
-    res.status(204);
+    res.status(200);
+    res.json({});
   });
 
   autorun(()=>{
