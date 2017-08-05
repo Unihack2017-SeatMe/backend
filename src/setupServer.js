@@ -23,7 +23,6 @@ function setupServer(mapState, port) {
   server.listen(port, undefined, undefined, () => {
     console.log("Server running on port " + port);
   });
-
   // uncomment after placing your favicon in /public
   //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(logger('dev'));
@@ -42,7 +41,7 @@ function setupServer(mapState, port) {
 
   autorun(()=>{
     io.emit(
-     allRoomData,
+     allRoomDataKey,
      createJsonFromMapState()
     );
   });
@@ -50,7 +49,7 @@ function setupServer(mapState, port) {
   io.on('connection', (socket) => {
     console.info("Client connected");
     socket.emit(
-      allRoomData,
+      allRoomDataKey,
       createJsonFromMapState()
     );
   })
