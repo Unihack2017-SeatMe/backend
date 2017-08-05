@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
+import express from 'express';
+import path from 'path';
+import logger from 'morgan';
+import bodyParser from 'body-parser';
 
 const port = process.env.PORT || 8080;
 
