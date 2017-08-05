@@ -8,11 +8,16 @@ import { autorun } from 'mobx';
 import { allRoomDataKey } from './shared/socket-keys';
 import { RoomData } from './shared/model/RoomData';
 function createJsonFromMapState(mapState) {
-  return mapState.allRoomData.values().map(
-    roomData => {
-      return roomData;
+  const json = mapState.allRoomData.entries().map(
+    ([key, roomData]) => {
+      return {
+        id: parseInt(key),
+        capacity: roomData.capacity,
+        count: roomData.count
+      };
     }
   )
+  return json;
 }
 function setupServer(mapState, port) {
 
@@ -36,8 +41,8 @@ function setupServer(mapState, port) {
   });
 
   app.post('/devices', (req, res) => {
-    mapState.addRoomData(new RoomData(req.body));
-    console.info(req.body);
+    mapState.addRoomData(req.body.id, new RoomData(req.body));
+    //console.info(req.body);
     res.status(200);
     res.json({});
   });
