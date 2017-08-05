@@ -4,6 +4,8 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import SocketIo from 'socket.io';
 import http from 'http';
+import { mapState } from './shared/dummyState';
+
 const port = process.env.PORT || 8080;
 
 const app = express();
@@ -27,8 +29,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/devices', (req, res) => {
-	res.status(204);
-  res.send();
+  res.status(204);
+  mapState.setRoomData
 });
 
 // catch 404 and forward to error handler
