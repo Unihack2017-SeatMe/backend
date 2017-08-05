@@ -10,7 +10,7 @@ function createWebpackBackend(entryDirectory)
             filename: 'backend-compiled-debug.js'
         },
         resolve: {
-            extensions: ['.js', '.jsx']
+            extensions: ['.js', '.jsx', '.ts', '.tsx']
         },
         externals: [nodeExternals()],
         bail: true,
@@ -21,7 +21,7 @@ function createWebpackBackend(entryDirectory)
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(js|jsx|ts|tsx)$/,
                     use: [
                         {
                             loader: 'babel-loader'

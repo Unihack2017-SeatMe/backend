@@ -1,3 +1,3 @@
 const createWebpackBackend = require('./createWebpack');
 
-module.exports = createWebpackBackend('./src/index.js');
+module.exports = createWebpackBackend('./src/index.tsx');
