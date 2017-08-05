@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.json({ hello: 'world' });
 });
 
-app.post('/room', (req, res) => {
+app.post('/devices', (req, res) => {
 	res.status(204);
   res.send();
 });
