@@ -5,7 +5,8 @@ import bodyParser from 'body-parser';
 import SocketIo from 'socket.io';
 import http from 'http';
 import { autorun } from 'mobx'; 
-function createJsonFromMapState() {
+import { allRoomDataKey } from './shared/socket-keys';
+function createJsonFromMapState(mapState) {
   return mapState.allRoomData.values().map(
     roomData => {
       return roomData;
@@ -42,7 +43,7 @@ function setupServer(mapState, port) {
   autorun(()=>{
     io.emit(
      allRoomDataKey,
-     createJsonFromMapState()
+     createJsonFromMapState(mapState)
     );
   });
 
@@ -50,7 +51,7 @@ function setupServer(mapState, port) {
     console.info("Client connected");
     socket.emit(
       allRoomDataKey,
-      createJsonFromMapState()
+      createJsonFromMapState(mapState)
     );
   })
 

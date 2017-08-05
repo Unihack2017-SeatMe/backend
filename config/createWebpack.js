@@ -12,17 +12,17 @@ function createWebpackBackend(entryDirectory)
         resolve: {
             extensions: ['.js', '.jsx']
         },
+        externals: [nodeExternals()],
         bail: true,
         target: 'node',
         name: 'Backend Server',
         entry: entryDirectory,
-        externals: [nodeExternals()],
         devtool: 'source-map',
         module: {
             rules: [
                 {
                     test: /\.(js|jsx)$/,
-                    loader: 'babel-loader',
+                    loader: 'babel-loader'
                 }
             ]
         },
