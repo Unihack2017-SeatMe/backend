@@ -49,3 +49,6 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
+io.on('connection', (socket) => {
+  console.info("Client connected");
+})
