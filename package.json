@@ -32,14 +32,19 @@
     "webpack-shell-plugin": "^0.5.0"
   },
   "devDependencies": {
+    "awesome-typescript-loader": "^3.2.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-decorators": "^6.24.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1"
+    "babel-preset-stage-0": "^6.24.1",
+    "typescript": "^2.4.2"
   },
   "babel": {
-    "presets": [ "es2017", "stage-0" ],
+    "presets": [
+      "es2017",
+      "stage-0"
+    ],
     "plugins": [
       "transform-react-jsx",
       "transform-decorators-legacy"

@@ -22,7 +22,17 @@ function createWebpackBackend(entryDirectory)
             rules: [
                 {
                     test: /\.(js|jsx)$/,
-                    loader: 'babel-loader'
+                    use: [
+                        {
+                            loader: 'babel-loader'
+                        },
+                        {
+                            loader: 'awesome-typescript-loader',
+                            options: {
+                                useBabel: true
+                            }
+                        }
+                    ]
                 }
             ]
         },

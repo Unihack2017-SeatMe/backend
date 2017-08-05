@@ -71,107 +71,82 @@ module.exports = require("mobx");
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setupServer__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_state_dummyState__ = __webpack_require__(10);
 
 
+Object.defineProperty(exports, "__esModule", { value: true });
+const setupServer_1 = __webpack_require__(2);
+const dummyState_1 = __webpack_require__(9);
 let envPort = process.env.PORT || 8080;
-Object(__WEBPACK_IMPORTED_MODULE_0__setupServer__["a" /* setupServer */])(__WEBPACK_IMPORTED_MODULE_1__shared_state_dummyState__["a" /* mapState */], envPort);
+setupServer_1.setupServer(dummyState_1.mapState, envPort);
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return setupServer; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_path__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_path__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_morgan__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_morgan___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_morgan__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_body_parser__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_body_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_body_parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_socket_io___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_socket_io__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_http__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_http___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_http__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_mobx__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_mobx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_mobx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_socket_keys__ = __webpack_require__(9);
 
 
-
-
-
-
-
-
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = __webpack_require__(3);
+const logger = __webpack_require__(4);
+const bodyParser = __webpack_require__(5);
+const SocketIo = __webpack_require__(6);
+const http = __webpack_require__(7);
+const mobx_1 = __webpack_require__(0);
+const socket_keys_1 = __webpack_require__(8);
 function createJsonFromMapState(mapState) {
-  return mapState.allRoomData.values().map(roomData => {
-    return roomData;
-  });
+    return mapState.allRoomData.values().map(roomData => {
+        return roomData;
+    });
 }
 function setupServer(mapState, port) {
-
-  const app = __WEBPACK_IMPORTED_MODULE_0_express___default()();
-
-  const server = __WEBPACK_IMPORTED_MODULE_5_http___default.a.Server(app);
-
-  const io = __WEBPACK_IMPORTED_MODULE_4_socket_io___default()(server);
-
-  server.listen(port, undefined, undefined, () => {
-    console.log("Server running on port " + port);
-  });
-  // uncomment after placing your favicon in /public
-  //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-  app.use(__WEBPACK_IMPORTED_MODULE_2_morgan___default()('dev'));
-  app.use(__WEBPACK_IMPORTED_MODULE_3_body_parser___default.a.json());
-  app.use(__WEBPACK_IMPORTED_MODULE_3_body_parser___default.a.urlencoded({ extended: false }));
-
-  app.get('/', (req, res) => {
-    res.json({ hello: 'world' });
-  });
-
-  app.post('/devices', (req, res) => {
-    mapState.addRoomData(req.body);
-    console.info(req.body);
-    res.status(204);
-  });
-
-  Object(__WEBPACK_IMPORTED_MODULE_6_mobx__["autorun"])(() => {
-    io.emit(__WEBPACK_IMPORTED_MODULE_7__shared_socket_keys__["allRoomDataKey"], createJsonFromMapState(mapState));
-  });
-
-  io.on('connection', socket => {
-    console.info("Client connected");
-    socket.emit(__WEBPACK_IMPORTED_MODULE_7__shared_socket_keys__["allRoomDataKey"], createJsonFromMapState(mapState));
-  });
-
-  // catch 404 and forward to error handler
-  app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-  });
-
-  // error handler
-  app.use((err, req, res, next) => {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-  });
+    const app = express();
+    const server = http.Server(app);
+    const io = SocketIo(server);
+    server.listen(port, undefined, undefined, () => {
+        console.log("Server running on port " + port);
+    });
+    // uncomment after placing your favicon in /public
+    //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+    app.use(logger('dev'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.get('/', (req, res) => {
+        res.json({ hello: 'world' });
+    });
+    app.post('/devices', (req, res) => {
+        mapState.addRoomData(req.body);
+        console.info(req.body);
+        res.status(200);
+        res.json({});
+    });
+    mobx_1.autorun(() => {
+        io.emit(socket_keys_1.allRoomDataKey, createJsonFromMapState(mapState));
+    });
+    io.on('connection', socket => {
+        console.info("Client connected");
+        socket.emit(socket_keys_1.allRoomDataKey, createJsonFromMapState(mapState));
+    });
+    // catch 404 and forward to error handler
+    app.use((req, res, next) => {
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
+    });
+    // error handler
+    app.use((err, req, res, next) => {
+        // set locals, only providing error in development
+        res.locals.message = err.message;
+        res.locals.error = req.app.get('env') === 'development' ? err : {};
+        // render the error page
+        res.status(err.status || 500);
+        res.render('error');
+    });
 }
-
-
+exports.setupServer = setupServer;
 
 /***/ }),
 /* 3 */
@@ -183,203 +158,154 @@ module.exports = require("express");
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = require("path");
+module.exports = require("morgan");
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-module.exports = require("morgan");
+module.exports = require("body-parser");
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-module.exports = require("body-parser");
+module.exports = require("socket.io");
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
-module.exports = require("socket.io");
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
 module.exports = require("http");
 
 /***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* unused harmony export socketKeys */
-const socketKeys = {
-  roomDataKey: 'room_data',
-  allRoomDataKey: 'all_room_data'
-};
 
-/* unused harmony default export */ var _unused_webpack_default_export = (socketKeys);
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.roomDataKey = 'room_data';
+exports.allRoomDataKey = 'all_room_data';
 
 /***/ }),
-/* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return mapState; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_MapState__ = __webpack_require__(11);
 
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const MapState_1 = __webpack_require__(10);
 let currentId = 0;
 const capacity = 100;
 let currentCount = 30;
 const initial = [];
 for (let i = 0; i < 5; i++) {
-  initial.push([i, {
-    count: currentCount,
-    capacity
-  }]);
-  currentCount += 10;
+    initial.push([i, {
+        count: currentCount,
+        capacity
+    }]);
+    currentCount += 10;
 }
-const mapState = new __WEBPACK_IMPORTED_MODULE_0__model_MapState__["a" /* MapState */](new Map(initial));
+const mapState = new MapState_1.MapState(new Map(initial));
+exports.mapState = mapState;
 
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __decorate = this && this.__decorate || function (decorators, target, key, desc) {
+    var c = arguments.length,
+        r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
+        d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = this && this.__metadata || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mobx_1 = __webpack_require__(0);
+const LOCATIONS_1 = __webpack_require__(11);
+let MapState = class MapState {
+    constructor(initialRoomData) {
+        this.allRoomState = null;
+        this.allRoomState = initialRoomData;
+    }
+    addRoomData(roomData) {
+        // TODO: Change this? Maybe keep a record of all room data across time.
+        this.setRoomData(roomData);
+    }
+    setRoomData(roomData) {
+        this.allRoomState.set(roomData.id, roomData);
+    }
+    get allRoomData() {
+        return this.allRoomState;
+    }
+    get allRoomGeoData() {
+        const result = [];
+        for (const [key, { count, capacity }] of this.allRoomData) {
+            result.push({
+                type: 'Feature',
+                properties: {
+                    name: LOCATIONS_1.default[key].name,
+                    count,
+                    capacity
+                },
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [LOCATIONS_1.default[key].coordinates.map(([lng, lat]) => [lat, lng])]
+                }
+            });
+        }
+        return result;
+    }
+};
+
+__decorate([mobx_1.observable, __metadata("design:type", Object)], MapState.prototype, "allRoomState", void 0);
+__decorate([mobx_1.action, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], MapState.prototype, "addRoomData", null);
+__decorate([mobx_1.action, __metadata("design:type", Function), __metadata("design:paramtypes", [Object]), __metadata("design:returntype", void 0)], MapState.prototype, "setRoomData", null);
+__decorate([mobx_1.computed, __metadata("design:type", Object), __metadata("design:paramtypes", [])], MapState.prototype, "allRoomData", null);
+__decorate([mobx_1.computed, __metadata("design:type", Object), __metadata("design:paramtypes", [])], MapState.prototype, "allRoomGeoData", null);
+exports.MapState = MapState;
+exports.default = MapState;
 
 /***/ }),
 /* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MapState; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mobx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__LOCATIONS__ = __webpack_require__(12);
-var _desc, _value, _class, _descriptor;
-
-function _initDefineProp(target, property, descriptor, context) {
-  if (!descriptor) return;
-  Object.defineProperty(target, property, {
-    enumerable: descriptor.enumerable,
-    configurable: descriptor.configurable,
-    writable: descriptor.writable,
-    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
-  });
-}
-
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-  var desc = {};
-  Object['ke' + 'ys'](descriptor).forEach(function (key) {
-    desc[key] = descriptor[key];
-  });
-  desc.enumerable = !!desc.enumerable;
-  desc.configurable = !!desc.configurable;
-
-  if ('value' in desc || desc.initializer) {
-    desc.writable = true;
-  }
-
-  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-    return decorator(target, property, desc) || desc;
-  }, desc);
-
-  if (context && desc.initializer !== void 0) {
-    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-    desc.initializer = undefined;
-  }
-
-  if (desc.initializer === void 0) {
-    Object['define' + 'Property'](target, property, desc);
-    desc = null;
-  }
-
-  return desc;
-}
-
-function _initializerWarningHelper(descriptor, context) {
-  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
-}
 
 
-
-
-
-let MapState = (_class = class MapState {
-  constructor(initialRoomData) {
-    _initDefineProp(this, 'allRoomState', _descriptor, this);
-
-    this.allRoomState = initialRoomData;
-  }
-
-  addRoomData(roomData) {
-    // TODO: Change this? Maybe keep a record of all room data across time.
-    this.setRoomData(roomData);
-  }
-
-  setRoomData(roomData) {
-    this.allRoomState.set(roomData.id, roomData);
-  }
-
-  get allRoomData() {
-    return this.allRoomState;
-  }
-
-  get allRoomGeoData() {
-    const result = [];
-    for (const [key, { count, capacity }] of this.allRoomData) {
-      result.push({
-        type: 'Feature',
-        properties: {
-          name: __WEBPACK_IMPORTED_MODULE_1__LOCATIONS__["a" /* default */][key].name,
-          count,
-          capacity
-        },
-        geometry: {
-          type: 'Polygon',
-          coordinates: [__WEBPACK_IMPORTED_MODULE_1__LOCATIONS__["a" /* default */][key].coordinates.map(([lng, lat]) => [lat, lng])]
-        }
-      });
-    }
-    return result;
-  }
-}, (_descriptor = _applyDecoratedDescriptor(_class.prototype, 'allRoomState', [__WEBPACK_IMPORTED_MODULE_0_mobx__["observable"]], {
-  enumerable: true,
-  initializer: function () {
-    return null;
-  }
-}), _applyDecoratedDescriptor(_class.prototype, 'addRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'addRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'setRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["action"]], Object.getOwnPropertyDescriptor(_class.prototype, 'setRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomData'), _class.prototype), _applyDecoratedDescriptor(_class.prototype, 'allRoomGeoData', [__WEBPACK_IMPORTED_MODULE_0_mobx__["computed"]], Object.getOwnPropertyDescriptor(_class.prototype, 'allRoomGeoData'), _class.prototype)), _class);
-
-
-
-/* unused harmony default export */ var _unused_webpack_default_export = (MapState);
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const LOCATIONS = {
-  0: {
-    name: 'Room 0',
-    coordinates: [[-37.8165, 144.9628], [-37.8163, 144.9628], [-37.8163, 144.9627], [-37.8165, 144.9627], [-37.8165, 144.9628]]
-  },
-  1: {
-    name: 'Room 1',
-    coordinates: [[-37.8162, 144.9628], [-37.8160, 144.9628], [-37.8160, 144.9627], [-37.8162, 144.9627], [-37.8162, 144.9628]]
-  },
-  2: {
-    name: 'Room 2',
-    coordinates: [[-37.8165, 144.9631], [-37.8163, 144.9631], [-37.8163, 144.9630], [-37.8165, 144.9630], [-37.8165, 144.9631]]
-  },
-  3: {
-    name: 'Room 3',
-    coordinates: [[-37.8165, 144.9638], [-37.8163, 144.9638], [-37.8163, 144.9637], [-37.8165, 144.9637], [-37.8165, 144.9638]]
-  },
-  4: {
-    name: 'Room 4',
-    coordinates: [[-37.8165, 144.9648], [-37.8163, 144.9648], [-37.8163, 144.9647], [-37.8165, 144.9647], [-37.8165, 144.9648]]
-  }
+    0: {
+        name: 'Room 0',
+        coordinates: [[-37.8165, 144.9628], [-37.8163, 144.9628], [-37.8163, 144.9627], [-37.8165, 144.9627], [-37.8165, 144.9628]]
+    },
+    1: {
+        name: 'Room 1',
+        coordinates: [[-37.8162, 144.9628], [-37.8160, 144.9628], [-37.8160, 144.9627], [-37.8162, 144.9627], [-37.8162, 144.9628]]
+    },
+    2: {
+        name: 'Room 2',
+        coordinates: [[-37.8165, 144.9631], [-37.8163, 144.9631], [-37.8163, 144.9630], [-37.8165, 144.9630], [-37.8165, 144.9631]]
+    },
+    3: {
+        name: 'Room 3',
+        coordinates: [[-37.8165, 144.9638], [-37.8163, 144.9638], [-37.8163, 144.9637], [-37.8165, 144.9637], [-37.8165, 144.9638]]
+    },
+    4: {
+        name: 'Room 4',
+        coordinates: [[-37.8165, 144.9648], [-37.8163, 144.9648], [-37.8163, 144.9647], [-37.8165, 144.9647], [-37.8165, 144.9648]]
+    }
 };
-
-/* harmony default export */ __webpack_exports__["a"] = (LOCATIONS);
+exports.default = LOCATIONS;
 
 /***/ })
 /******/ ]);

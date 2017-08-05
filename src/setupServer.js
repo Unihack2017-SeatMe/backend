@@ -1,9 +1,9 @@
-import express from 'express';
-import path from 'path';
-import logger from 'morgan';
-import bodyParser from 'body-parser';
-import SocketIo from 'socket.io';
-import http from 'http';
+import * as express from 'express';
+import * as path from 'path';
+import * as logger from 'morgan';
+import * as bodyParser from 'body-parser';
+import * as SocketIo from 'socket.io';
+import * as http from 'http';
 import { autorun } from 'mobx'; 
 import { allRoomDataKey } from './shared/socket-keys';
 function createJsonFromMapState(mapState) {
