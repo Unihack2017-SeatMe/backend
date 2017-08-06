@@ -32,16 +32,16 @@ function setupServer(mapState, port) {
   });
   // uncomment after placing your favicon in /public
   //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-  app.use(logger('dev'));
+  // app.use(logger('dev'));
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
-
+  // app.use(bodyParser.urlencoded({ extended: false }));
   app.get('/', (req, res) => {
     res.json({ hello: 'world' });
   });
 
   app.post('/devices', (req, res) => {
     mapState.addRoomData(req.body.id, new RoomData(req.body));
+    console.log(req.body);
     //console.info(req.body);
     res.status(200);
     res.json({});
@@ -64,11 +64,11 @@ function setupServer(mapState, port) {
 
 
   // catch 404 and forward to error handler
-  app.use((req, res, next) => {
+  /*app.use((req, res, next) => {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
-  });
+  });*/
 
   // error handler
   app.use((err, req, res, next) => {
@@ -78,7 +78,6 @@ function setupServer(mapState, port) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
   });
 
 }
