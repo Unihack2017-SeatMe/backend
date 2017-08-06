@@ -33,7 +33,14 @@ function setupServer(mapState, port) {
   // uncomment after placing your favicon in /public
   //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   // app.use(logger('dev'));
+
   app.use(bodyParser.json());
+  app.use(function (req, res, next) {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept-Type');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      next();
+  });
   app.use(bodyParser.urlencoded({ extended: false }));
   app.get('/', (req, res) => {
     res.json({ hello: 'world' });
