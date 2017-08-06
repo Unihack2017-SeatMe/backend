@@ -50,7 +50,7 @@ function setupServer(mapState, port) {
     req.body.id = parseInt(req.body.id);
     req.body.capacity = parseInt(req.body.capacity);
     req.body.count = parseInt(req.body.count);
-    console.log(req.body);
+    //console.log(req.body);
     //console.info(req.body);
     res.json(req.body);
     mapState.addRoomData(parseInt(req.body.id), new RoomData(req.body));
