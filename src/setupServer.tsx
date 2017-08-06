@@ -4,7 +4,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as SocketIo from 'socket.io';
 import * as http from 'http';
-import { autorun } from 'mobx'; 
+import { autorun } from 'mobx';
 import { allRoomDataKey } from './shared/socket-keys';
 import { RoomData } from './shared/model/RoomData';
 function createJsonFromMapState(mapState) {
@@ -34,17 +34,19 @@ function setupServer(mapState, port) {
   //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   // app.use(logger('dev'));
   app.use(bodyParser.json());
-  // app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.get('/', (req, res) => {
     res.json({ hello: 'world' });
   });
 
   app.post('/devices', (req, res) => {
-    mapState.addRoomData(req.body.id, new RoomData(req.body));
+    req.body.id = parseInt(req.body.id);
+    req.body.capacity = parseInt(req.body.capacity);
+    req.body.count = parseInt(req.body.count);
     console.log(req.body);
     //console.info(req.body);
-    res.status(200);
-    res.json({});
+    res.json(req.body);
+    mapState.addRoomData(parseInt(req.body.id), new RoomData(req.body));
   });
 
   autorun(()=>{
@@ -62,23 +64,6 @@ function setupServer(mapState, port) {
     );
   })
 
-
-  // catch 404 and forward to error handler
-  /*app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-  });*/
-
-  // error handler
-  app.use((err, req, res, next) => {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
-    res.status(err.status || 500);
-  });
 
 }
 
