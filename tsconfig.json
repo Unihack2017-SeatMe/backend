@@ -4,8 +4,7 @@
     "module": "commonjs",
     "target": "es6",
     "lib":["esnext"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "jsx": "react",
     "moduleResolution": "node",
     "sourceMap": true,
     "allowJs": true,
@@ -13,10 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "noEmitHelpers": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noEmitHelpers": false 
   },
   "files": [],
   "exclude": [

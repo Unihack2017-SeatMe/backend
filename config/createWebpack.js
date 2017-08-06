@@ -10,18 +10,29 @@ function createWebpackBackend(entryDirectory)
             filename: 'backend-compiled-debug.js'
         },
         resolve: {
-            extensions: ['.js', '.jsx']
+            extensions: ['.js', '.jsx', '.ts', '.tsx']
         },
+        externals: [nodeExternals()],
         bail: true,
         target: 'node',
         name: 'Backend Server',
         entry: entryDirectory,
-        externals: [nodeExternals()],
         devtool: 'source-map',
         module: {
             rules: [
                 {
-                    loader: 'babel-loader',
+                    test: /\.(js|jsx|ts|tsx)$/,
+                    use: [
+                        {
+                            loader: 'babel-loader'
+                        },
+                        {
+                            loader: 'awesome-typescript-loader',
+                            options: {
+                                useBabel: true
+                            }
+                        }
+                    ]
                 }
             ]
         },
